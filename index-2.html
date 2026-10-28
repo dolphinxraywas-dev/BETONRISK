@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>NBA — Take the Throne (Prototype)</title>
+<style>
+:root{--bg:#090b13;--panel:#121725;--panel2:#181f31;--line:#2c3650;--text:#f3f5ff;--muted:#9ba8c5;--gold:#ffcb5b;--pink:#ff5d8f;--blue:#70b7ff;--green:#72e6ad}
+*{box-sizing:border-box}body{margin:0;padding-bottom:env(safe-area-inset-bottom);background:radial-gradient(ellipse at top,#202342 0,#090b13 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(135deg,#ffcb5b,#ff9d48);color:#17121a;font-weight:800}button.secondary{background:#242e45;color:#e9efff;border:1px solid #3a4765}button.danger{background:#54243a;color:#ffe8ef;border:1px solid #9e4165}button:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #3a4560;border-radius:10px;background:#0c1120;color:var(--text);outline:none}input:focus,textarea:focus{border-color:var(--blue)}label{display:block;color:var(--muted);font-size:12px;margin:10px 0 5px}.small{font-size:12px;color:var(--muted)}.muted{color:var(--muted)}.gold{color:var(--gold)}.green{color:var(--green)}.pink{color:var(--pink)}
+header{position:sticky;top:0;z-index:5;background:#0b0e18eF;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px max(16px,calc((100% - 1200px)/2));display:flex;align-items:center;gap:12px;justify-content:space-between}
+.brand{font-weight:1000;letter-spacing:2px;font-size:22px}.brand span{color:var(--gold)}.balance{border:1px solid #64512a;background:#282113;padding:8px 12px;border-radius:99px;font-weight:800;color:var(--gold)}
+main{max-width:1200px;margin:auto;padding:18px 14px 60px}.hero{border:1px solid #4c3d4c;border-radius:22px;padding:24px;background:linear-gradient(115deg,#271b35,#141c30 60%,#27241b);position:relative;overflow:hidden}.hero:after{content:"♛";position:absolute;right:24px;top:-18px;font-size:140px;color:#ffffff0c}.eyebrow{letter-spacing:2px;text-transform:uppercase;font-size:11px;color:var(--gold);font-weight:900}.hero h1{font-size:clamp(28px,5vw,48px);line-height:1.04;margin:8px 0}.hero p{max-width:650px;color:#c6cde1}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.stat{background:#0c1120b8;border:1px solid #35405b;border-radius:14px;padding:12px}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:14px 0}.tab{white-space:nowrap;background:#171e2e;color:#bdc8e1;border:1px solid #313d56}.tab.active{background:var(--gold);color:#17121a;border-color:var(--gold)}.grid{display:grid;grid-template-columns:1.35fr .85fr;gap:14px}.panel{background:linear-gradient(145deg,#151c2b,#101522);border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:14px}.panel h2,.panel h3{margin:0 0 12px}.panel h2{font-size:20px}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.numbers{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:12px 0}.num{padding:12px 0;border-radius:12px;border:1px solid #3b4863;background:#0d1424;color:white;font-weight:900}.num.selected{background:var(--gold);color:#17121a;border-color:#fff1b0;box-shadow:0 0 0 2px #ffcb5b44}.results{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:12px 0}.ball{border-radius:14px;aspect-ratio:1;display:grid;place-items:center;background:linear-gradient(145deg,#242e49,#0b1020);border:1px solid #445371;font-size:22px;font-weight:1000}.ball.hit{border-color:var(--gold);color:var(--gold);box-shadow:inset 0 0 15px #ffcb5b18}.banner{padding:12px;border-radius:12px;background:#1e2c29;border:1px solid #35624f;color:#a9ffd1;margin:10px 0}.hide{display:none!important}.section{display:none}.section.active{display:block}.pill{display:inline-block;padding:4px 8px;border:1px solid #3d4963;border-radius:99px;color:#c8d3ee;font-size:11px}.listrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #273147}.listrow:last-child{border-bottom:0}.badgegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.badgecard{background:#0c1120;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}.badgeicon{font-size:30px}.badgecard b{display:block}.badgecard small{color:var(--muted)}.leader{display:grid;grid-template-columns:36px 1fr auto;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid #273147}.avatar{width:34px;height:34px;border-radius:50%;background:#283553;display:grid;place-items:center;font-weight:900}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ticket{border:1px dashed #8b774b;border-radius:15px;padding:15px;background:#201d18}.chatlog{height:190px;overflow:auto;background:#0a0f1c;border:1px solid #2b354c;border-radius:12px;padding:10px}.msg{padding:8px 10px;border-radius:12px;background:#222c42;margin:6px 0;max-width:90%}.msg.me{margin-left:auto;background:#3a2b45}.notice{padding:11px;border:1px solid #394661;border-radius:12px;background:#101828;color:#bdc8e1;font-size:12px}.adminlock{max-width:450px;margin:auto}.footer{text-align:center;color:#77839e;font-size:11px;padding:25px 10px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.badgegrid{grid-template-columns:repeat(2,1fr)}header{padding:10px 12px}.hero{padding:18px}.hero:after{font-size:90px}.fieldgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="brand">N<span>B</span>A <span style="font-size:10px;color:#aab5ce;letter-spacing:1px">TAKE THE THRONE</span></div><div class="row" style="flex:0 1 auto"><span class="balance" id="balance">🪙 2,000</span><button class="secondary" onclick="openTab('store')">Store</button></div></header>
+<main>
+<section id="entry" class="panel adminlock">
+  <div class="eyebrow">Player entrance</div><h1 style="font-size:30px;margin:8px 0">Enter your throne name</h1>
+  <p class="muted">Choose a unique player name to enter the NBA arena.</p>
+  <label for="playerName">Player name</label><input id="playerName" maxlength="20" placeholder="Enter a name">
+  <div id="nameMsg" class="small" style="margin:8px 0;min-height:18px"></div>
+  <button style="width:100%" onclick="joinGame()">Enter NBA →</button>
+  <div class="notice" style="margin-top:12px">Prototype only: player names and demo balances are saved in this browser. This is not a live multiplayer service.</div>
+</section>
+<div id="app" class="hide">
+<section class="hero">
+  <div class="eyebrow">Welcome to NBA</div>
+  <h1>Take the throne of NBA</h1>
+  <p>It's all on luck! Pick your numbers, test your fortune, collect badges, and climb the leaderboard.</p>
+  <div class="row" style="max-width:460px;flex-wrap:wrap"><button onclick="openTab('games')">Play now</button><button class="secondary" onclick="shareInvite()">Invite your friends ↗</button></div>
+</section>
+<div class="stats">
+ <div class="stat"><b id="memberCount">362</b><span>MEMBERS JOINED · demo counter</span></div>
+ <div class="stat"><b id="activeCount">127</b><span>ACTIVE PLAYERS · simulated</span></div>
+ <div class="stat"><b id="topBadgeCount">0</b><span>BADGES COLLECTED BY YOU</span></div>
+</div>
+<div class="banner" id="winnerBanner">🏆 NBA Arena: good luck to every player!</div>
+<div class="tabs">
+ <button class="tab active" data-tab="games" onclick="openTab('games')">🎲 Games</button>
+ <button class="tab" data-tab="store" onclick="openTab('store')">🛍 Store</button>
+ <button class="tab" data-tab="rank" onclick="openTab('rank')">🏆 Rankings</button>
+ <button class="tab" data-tab="jackpot" onclick="openTab('jackpot')">🎟 Jackpot</button>
+ <button class="tab" data-tab="wallet" onclick="openTab('wallet')">💸 Exchange</button>
+ <button class="tab" data-tab="chat" onclick="openTab('chat')">💬 Host chat</button>
+ <button class="tab" data-tab="invite" onclick="openTab('invite')">🔗 Invite</button>
+ <button class="tab" data-tab="control" onclick="openTab('control')">⚙ Control panel</button>
+</div>
+<section class="section active" id="sec-games">
+ <div class="grid">
+  <div>
+   <div class="panel">
+    <h2>🎡 Six Wheel Challenge</h2><p class="small">Choose two numbers. Duplicate picks are allowed. A number appearing 2+ times pays the matching multiplier.</p>
+    <label>Choose your two numbers</label><div class="numbers" id="wheelPicks"></div>
+    <div class="fieldgrid"><div><label>Bet tokens (400–4,000)</label><input id="wheelBet" type="number" min="400" max="4000" step="100" value="400"></div><div><label>Potential payout</label><div class="notice" id="wheelPotential">Up to ×6</div></div></div>
+    <div class="results" id="wheelResults"><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div></div>
+    <button onclick="play('wheel')">Spin the wheels</button><span class="small" id="wheelStatus" style="margin-left:10px">Pick 2 numbers</span>
+   </div>
+   <div class="panel">
+    <h2>🎲 Six Dice Challenge</h2><p class="small">Same rules as the wheel. Results show below the dice after the roll.</p>
+    <label>Choose your two numbers</label><div class="numbers" id="dicePicks"></div>
+    <div class="fieldgrid"><div><label>Bet tokens (400–4,000)</label><input id="diceBet" type="number" min="400" max="4000" step="100" value="400"></div><div><label>Potential payout</label><div class="notice">×2, ×3, ×4, ×5 or ×6</div></div></div>
+    <div class="results" id="diceResults"><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div><div class="ball">?</div></div>
+    <button onclick="play('dice')">Roll the dice</button><span class="small" id="diceStatus" style="margin-left:10px">Pick 2 numbers</span>
+   </div>
+  </div>
+  <aside>
+   <div class="panel"><h2>👑 Your profile</h2><div class="listrow"><span class="muted">Throne name</span><b id="profileName">Player</b></div><div class="listrow"><span class="muted">Rounds played</span><b id="roundCount">0</b></div><div class="listrow"><span class="muted">Win / loss</span><b id="wl">0 / 0</b></div><div class="listrow"><span class="muted">Net game result</span><b id="playerNet">0 tokens</b></div><div class="listrow"><span class="muted">Badge collection</span><b id="badgeSummary">None yet</b></div></div>
+   <div class="panel"><h2>⭐ Badge ladder</h2><div class="listrow"><span>🥉 Bronze · ×3</span><b>100 coins</b></div><div class="listrow"><span>🥈 Silver · ×4</span><b>150 coins</b></div><div class="listrow"><span>🥇 Gold · ×5</span><b>200 coins</b></div><div class="listrow"><span>💎 Diamond · ×6</span><b>350 coins</b></div><p class="small">Earn badges by hitting the matching multiplier. Exchange them in the Store.</p></div>
+   <div class="panel"><h2>📣 Latest arena win</h2><div id="recentWin" class="small">The next winning round may appear here.</div></div>
+  </aside>
+ </div>
+</section>
+<section class="section" id="sec-store">
+ <div class="panel"><h2>🛍 NBA Store</h2><p class="small">Prototype store. Token purchases are simulated and do not process payments.</p>
+  <div class="fieldgrid">
+   <div class="badgecard"><div class="badgeicon">🪙</div><b>20 tokens</b><p class="small">Nu. 5 · demo package</p><button onclick="demoTopup(20)">Select</button></div>
+   <div class="badgecard"><div class="badgeicon">💰</div><b>3,000 tokens</b><p class="small">Nu. 750 · demo package</p><button onclick="demoTopup(3000)">Select</button></div>
+  </div>
+  <h3 style="margin-top:22px">Exchange your badges for coins</h3><div class="badgegrid" id="badgeStore"></div>
+ </div>
+</section>
+<section class="section" id="sec-rank">
+ <div class="grid"><div class="panel"><h2>🏆 Top 10 badge collectors</h2><div id="leaderboard"></div></div><div class="panel"><h2>✨ Elite demo players</h2><p class="small">These sample profiles are clearly marked as simulated NPCs, not real players.</p><div id="npcList"></div></div></div>
+</section>
+<section class="section" id="sec-jackpot">
+ <div class="panel"><div class="eyebrow">Weekly giveaway concept</div><h2>🎟 Explore the Jackpot</h2><p>Pre-owned iPhone 13 + charger + cover · 400 tokens per ticket · weekly draw concept.</p><div class="notice">This is a visual demo only. No ticket payment, actual prize draw, or real ticket issuance takes place in this prototype.</div>
+ <div class="fieldgrid" style="margin-top:14px"><div><label>Ticket number (2,000–4,000)</label><input id="ticketSearch" type="number" min="2000" max="4000" placeholder="Search a ticket number"></div><div style="align-self:end"><button class="secondary" onclick="searchTicket()">Search ticket</button></div></div><div id="ticketSearchResult" class="small" style="margin:10px 0"></div>
+ <div class="ticket"><h3>🎁 iPhone 13 Weekly Ticket</h3><p class="small">Choose a demo ticket number to preview the purchase flow.</p><div class="row"><div><label>Ticket number</label><select id="ticketChoice"></select></div><button onclick="startTicket()" style="align-self:end">Buy ticket · 400 tokens</button></div><div id="ticketFlow" class="hide" style="margin-top:15px"><div class="notice">Demo payment instructions: this panel simulates a host payment/QR step. Do not send money to a real account from this prototype.</div><div class="row" style="margin-top:10px"><div><label>Demo countdown</label><b id="ticketTimer">02:00</b></div><div><label>Attach payment screenshot (demo)</label><input id="ticketFile" type="file" accept="image/*"></div></div><button onclick="submitTicket()" style="margin-top:10px">Submit for host approval</button><div id="ticketMessage" class="small" style="margin-top:8px"></div></div>
+ <div id="myTickets" style="margin-top:12px"></div></div></div>
+</section>
+<section class="section" id="sec-wallet">
+ <div class="panel"><h2>💸 Exchange tokens with Nu.</h2><div class="notice">Demo withdrawal request only. No money is transferred. Rate shown for the prototype: 40 tokens = Nu. 10. Do not enter real bank details in this prototype.</div>
+ <div class="fieldgrid"><div><label>Tokens to withdraw (minimum 40)</label><input id="withdrawAmount" type="number" min="40" step="40" value="40"></div><div><label>Estimated Nu.</label><input id="withdrawNu" readonly value="10"></div></div>
+ <label>Account holder name</label><input id="accHolder" placeholder="Enter exact account holder name">
+ <label>Account number</label><input id="accNo" placeholder="Enter valid account number">
+ <label>Confirm account number</label><input id="accNo2" placeholder="Re-enter account number">
+ <p class="small">Please double-check the account holder name and account number before submitting.</p><button onclick="submitWithdraw()">Submit withdrawal request</button><div id="withdrawMsg" class="small" style="margin-top:10px"></div></div>
+</section>
+<section class="section" id="sec-chat">
+ <div class="grid"><div class="panel"><h2>💬 Private host chat</h2><p class="small">Prototype chat between this player and the host. Messages are stored only in this browser.</p><div id="chatLog" class="chatlog"></div><label>Message host</label><div class="row"><input id="chatText" placeholder="Write a message…"><button onclick="sendChat()">Send</button></div><label>Voice note (browser support varies)</label><div class="row"><button class="secondary" id="recordBtn" onclick="toggleRecord()">● Record voice</button><span id="recordStatus" class="small">Not recording</span></div><audio id="voicePlayback" controls class="hide" style="width:100%;margin-top:10px"></audio><input id="chatFile" type="file" accept="image/*,.pdf" style="margin-top:10px"><button class="secondary" onclick="attachChatFile()" style="margin-top:8px">Attach file</button><div id="attachMsg" class="small"></div></div><div class="panel"><h2>Host support</h2><p>Use this private chat to ask questions about demo top-ups, ticket status, or withdrawal requests.</p><div class="notice">In a live version, messages and uploaded files require a secure backend and access controls so only the player and host can see them.</div></div></div>
+</section>
+<section class="section" id="sec-invite">
+ <div class="panel"><h2>🔗 Invite your friends to NBA</h2><p>Share your invite link and bring friends into the arena.</p><label>Your invite link</label><div class="row"><input id="inviteUrl" readonly><button onclick="copyInvite()">Copy link</button></div><div class="row" style="flex-wrap:wrap;margin-top:12px"><button class="secondary" onclick="shareInvite()">Share…</button><button class="secondary" onclick="socialShare('whatsapp')">WhatsApp</button><button class="secondary" onclick="socialShare('facebook')">Facebook</button><button class="secondary" onclick="socialShare('instagram')">Instagram</button><button class="secondary" onclick="socialShare('tiktok')">TikTok</button><button class="secondary" onclick="airDropHint()">AirDrop</button></div><p class="small" id="shareMsg">Social share options open supported apps/sites where possible. Instagram, TikTok, and AirDrop may require sharing the copied link from your device.</p></div>
+</section>
+<section class="section" id="sec-control">
+ <div class="panel adminlock" id="adminLogin"><h2>🔐 Control panel</h2><p class="small">Admin access for this prototype.</p><label>Admin passcode</label><input type="password" id="adminPass" placeholder="Enter passcode"><button style="width:100%;margin-top:10px" onclick="adminLogin()">Unlock control panel</button><div id="adminError" class="small" style="margin-top:8px"></div></div>
+ <div id="adminPanel" class="hide">
+  <div class="panel"><div class="row"><h2>⚙ Host control centre</h2><button class="secondary" onclick="adminLogout()" style="flex:0 0 auto">Lock panel</button></div>
+   <div class="stats"><div class="stat"><b id="hostNet">0</b><span>HOST NET · TOKENS</span></div><div class="stat"><b id="hostCr">0</b><span>CR · BETS COLLECTED</span></div><div class="stat"><b id="hostDr">0</b><span>DR · REWARDS PAID</span></div></div>
+   <div class="fieldgrid"><div><label>Profit scheme display</label><select id="scheme"><option value="2">x2</option><option value="3">x3</option><option value="4">x4</option><option value="5">x5</option><option value="6">x6</option></select></div><div><label>Daily token deployment budget</label><input id="dailyBudget" type="number" value="40000"></div></div>
+   <div class="notice" style="margin-top:10px">The scheme is a visible configuration label only; it does not rig or override random outcomes. The game results are generated independently.</div>
+   <div class="fieldgrid"><div><label>Adjust member count (demo)</label><input id="memberSet" type="number" min="345" max="383" value="362"></div><div><label>Adjust active players (demo)</label><input id="activeSet" type="number" min="100" value="127"></div></div><button onclick="saveAdminSettings()" style="margin-top:10px">Save demo settings</button><span id="adminSettingsMsg" class="small" style="margin-left:10px"></span>
+  </div>
+  <div class="panel"><h2>👥 List of players</h2><div class="small">Registered names are saved in this browser for the prototype.</div><div id="playerList"></div></div>
+  <div class="panel"><h2>📒 CR / DR game ledger</h2><div class="small">CR = bet tokens collected by the game. DR = rewards paid. Net = CR − DR. Demo only.</div><div id="ledgerTotals" class="notice" style="margin:10px 0"></div><div style="overflow:auto"><table style="width:100%;border-collapse:collapse;min-width:620px"><thead><tr><th align="left">Time</th><th align="left">Player</th><th align="left">Game</th><th align="left">Result</th><th align="right">CR</th><th align="right">DR</th><th align="right">Net</th></tr></thead><tbody id="ledgerRows"></tbody></table></div></div>
+  <div class="panel"><h2>💸 Withdrawal requests</h2><div id="withdrawRequests" class="small">No requests yet.</div></div>
+  <div class="panel"><h2>🎟 Ticket approvals</h2><div id="ticketRequests" class="small">No tickets submitted.</div></div>
+  <div class="panel"><h2>💬 Host inbox</h2><div id="hostInbox" class="small">No messages yet.</div></div>
+  <div class="panel"><h2>🏅 Badge inventory overview</h2><div id="badgeAdmin" class="small"></div></div>
+ </div>
+</section>
+</div>
+<div class="footer">NBA prototype · Demo tokens only · No real payment, prize draw, or cash withdrawal is connected.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const BADGES={bronze:{name:'Bronze',icon:'🥉',mult:3,value:100},silver:{name:'Silver',icon:'🥈',mult:4,value:150},gold:{name:'Gold',icon:'🥇',mult:5,value:200},diamond:{name:'Diamond',icon:'💎',mult:6,value:350}};
+let state={name:'',tokens:2000,rounds:0,wins:0,losses:0,net:0,badges:{bronze:0,silver:0,gold:0,diamond:0},picks:{wheel:[],dice:[]},ledger:[],withdrawals:[],tickets:[],chat:[],players:[],memberCount:362,activeCount:127,hostUnlocked:false,scheme:2,dailyBudget:40000};
+let recording=null,recorder=null,recordChunks=[],ticketInterval=null,ticketSeconds=120;
+const npcs=[{name:'RoyalAce',badge:'💎',count:24},{name:'LuckyLion',badge:'🥇',count:19},{name:'CrownChaser',badge:'🥈',count:15},{name:'DicePhantom',badge:'💎',count:12},{name:'WheelWizard',badge:'🥉',count:9}];
+function save(){try{localStorage.setItem('nbaPrototypeState',JSON.stringify(state))}catch(e){}}
+function load(){try{let s=JSON.parse(localStorage.getItem('nbaPrototypeState')||'null');if(s)state={...state,...s}}catch(e){}}
+function fmt(n){return Number(n||0).toLocaleString()}
+function updateUI(){$('balance').textContent='🪙 '+fmt(state.tokens);$('profileName').textContent=state.name||'Player';$('roundCount').textContent=state.rounds;$('wl').textContent=state.wins+' / '+state.losses;$('playerNet').textContent=(state.net>0?'+':'')+fmt(state.net)+' tokens';$('badgeSummary').textContent=Object.entries(state.badges).filter(([k,v])=>v>0).map(([k,v])=>BADGES[k].icon+' '+v).join(' · ')||'None yet';$('topBadgeCount').textContent=Object.values(state.badges).reduce((a,b)=>a+b,0);$('memberCount').textContent=state.memberCount;$('activeCount').textContent=state.activeCount;$('inviteUrl').value=location.href.split('#')[0]+'?invite='+encodeURIComponent(state.name||'NBAPlayer');renderBadges();renderRank();if(state.hostUnlocked)renderAdmin();save()}
+function joinGame(){let n=$('playerName').value.trim().replace(/\s+/g,' ');if(n.length<3){$('nameMsg').textContent='Choose a name with at least 3 characters.';return}let existing=state.players.find(p=>p.toLowerCase()===n.toLowerCase());if(existing){let base=n.replace(/[^a-z0-9]/ig,'')||'Player';let suggestions=[base+'7',base+'_'+Math.floor(10+Math.random()*89),base+'NBA',base+'King'];$('nameMsg').innerHTML='❌ This name is already taken. Choose another:<br>'+suggestions.map(s=>`<button class="secondary" style="margin:5px 4px 0 0" onclick="useSuggestion('${s.replace(/'/g,"\\'")}')">${s}</button>`).join('');return}
+state.name=n;state.players.push(n);state.memberCount=Math.min(383,Math.max(345,state.memberCount+1));state.activeCount=Math.max(100,state.activeCount+1);$('entry').classList.add('hide');$('app').classList.remove('hide');$('nameMsg').textContent='';$('winnerBanner').textContent='👑 Welcome to NBA, '+n+' — take the throne of NBA, it’s all on luck!';updateUI()}
+function useSuggestion(n){$('playerName').value=n;$('nameMsg').textContent='Suggestion selected. Tap Enter NBA to join.'}
+function openTab(tab){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));$('sec-'+tab).classList.add('active');if(tab==='control'&&state.hostUnlocked)renderAdmin()}
+function makePickButtons(mode){let box=$(mode==='wheel'?'wheelPicks':'dicePicks');box.innerHTML='';for(let i=1;i<=6;i++){let b=document.createElement('button');b.className='num';b.textContent=i;b.onclick=()=>pick(mode,i);box.appendChild(b)}}
+function pick(mode,n){let a=state.picks[mode];if(a.length<2)a.push(n);else a=[n];state.picks[mode]=a;let box=$(mode==='wheel'?'wheelPicks':'dicePicks');[...box.children].forEach((b,i)=>{b.classList.toggle('selected',a.includes(i+1));b.textContent=(i+1)+(a.filter(x=>x===i+1).length>1?' ×2':'')});$(mode+'Status').textContent=a.length===2?'Picked '+a[0]+' and '+a[1]:'Pick one more number';save()}
+async function play(mode){let picks=state.picks[mode],bet=Number($(mode+'Bet').value);if(picks.length!==2){$(mode+'Status').textContent='Choose two numbers first.';return}if(!Number.isInteger(bet)||bet<400||bet>4000){$(mode+'Status').textContent='Bet must be 400–4,000 tokens.';return}if(bet>state.tokens){$(mode+'Status').textContent='Not enough tokens.';return}
+state.tokens-=bet;let results=Array.from({length:6},()=>1+Math.floor(Math.random()*6));let boxes=[...$(mode+'Results').children];for(let i=0;i<6;i++){boxes[i].textContent='…';boxes[i].classList.remove('hit');await new Promise(r=>setTimeout(r,180));boxes[i].textContent=results[i]}
+let counts={};results.forEach(n=>counts[n]=(counts[n]||0)+1);let best=0,hitNum=null;for(let n of picks){if((counts[n]||0)>best){best=counts[n];hitNum=n}}
+boxes.forEach((b,i)=>{if(results[i]===hitNum&&best>=2)b.classList.add('hit')});
+let reward=best>=2?bet*best:0;state.tokens+=reward;state.rounds++;state.net+=bet-reward;if(reward>0)state.wins++;else state.losses++;
+let badgeKey={3:'bronze',4:'silver',5:'gold',6:'diamond'}[best];if(badgeKey){state.badges[badgeKey]=(state.badges[badgeKey]||0)+1;$('winnerBanner').textContent='🏆 '+state.name+' won '+(best===2?'DOUBLE HIT':best===3?'TRIPLE HIT':best===4?'QUADRUPLE HIT':best===5?'FIVE HIT':'SIX HIT')+' — '+fmt(reward)+' tokens!';$('recentWin').textContent=state.name+' hit ×'+best+' in '+(mode==='wheel'?'Wheel':'Dice')+' and earned '+fmt(reward)+' tokens.'}
+else {$('winnerBanner').textContent='🎲 '+state.name+' played a round. Keep it fun and good luck!'}
+$(mode+'Status').textContent='Results: '+results.join(' · ')+' | '+(best>=2?'Number '+hitNum+' appeared '+best+' times — ×'+best+' payout '+fmt(reward):'No selected number appeared more than once — no payout');
+state.ledger.unshift({time:new Date().toLocaleString(),player:state.name,game:mode==='wheel'?'Wheel':'Dice',result:results.join(','),cr:bet,dr:reward,net:bet-reward});updateUI()}
+function renderBadges(){let box=$('badgeStore');if(!box)return;box.innerHTML=Object.entries(BADGES).map(([k,b])=>`<div class="badgecard"><div class="badgeicon">${b.icon}</div><b>${b.name}</b><small>Owned: ${state.badges[k]||0}</small><p class="small">Redeem for ${b.value} tokens</p><button ${state.badges[k]?'' :'disabled'} onclick="redeemBadge('${k}')">Exchange</button></div>`).join('')}
+function redeemBadge(k){if(!state.badges[k])return;state.badges[k]--;state.tokens+=BADGES[k].value;updateUI();alert(BADGES[k].name+' badge exchanged for '+BADGES[k].value+' demo tokens.')}
+function renderRank(){let all=npcs.map(n=>({name:n.name,count:n.count,npc:true}));all.push({name:state.name||'You',count:Object.values(state.badges).reduce((a,b)=>a+b,0),npc:false});all.sort((a,b)=>b.count-a.count);$('leaderboard').innerHTML=all.slice(0,10).map((p,i)=>`<div class="leader"><div class="avatar">${i+1}</div><div><b>${p.name}</b><div class="small">${p.npc?'Simulated NPC':'You'}</div></div><b class="gold">${p.count} 🏅</b></div>`).join('');$('npcList').innerHTML=npcs.map(n=>`<div class="listrow"><span>${n.badge} ${n.name}</span><span class="pill">NPC · ${n.count} badges</span></div>`).join('')}
+function demoTopup(n){if(confirm('Add '+n+' demo tokens? No payment will be taken.')){state.tokens+=n;updateUI();alert('Demo tokens added. No money was charged.')}}
+function shareInvite(){let url=$('inviteUrl').value;if(navigator.share){navigator.share({title:'Join NBA',text:'Take the throne of NBA — it’s all on luck!',url}).catch(()=>{})}else{copyInvite()}}
+function copyInvite(){let url=$('inviteUrl').value;navigator.clipboard?.writeText(url).then(()=>$('shareMsg').textContent='Invite link copied.').catch(()=>{prompt('Copy your invite link:',url)})||prompt('Copy your invite link:',url)}
+function socialShare(platform){let url=encodeURIComponent($('inviteUrl').value),txt=encodeURIComponent('Join NBA — take the throne, it’s all on luck!');let links={whatsapp:'https://wa.me/?text='+txt+'%20'+url,facebook:'https://www.facebook.com/sharer/sharer.php?u='+url,instagram:'',tiktok:''};if(links[platform])window.open(links[platform],'_blank','noopener');else alert(platform==='instagram'?'Copy the link, then paste it into Instagram Direct or your bio.':'Copy the link and share it in TikTok messages or your profile.')}
+function airDropHint(){alert('On iPhone, tap Copy link, then share it through the iOS Share menu and choose AirDrop.')}
+function submitWithdraw(){let amount=Number($('withdrawAmount').value),holder=$('accHolder').value.trim(),a=$('accNo').value.trim(),b=$('accNo2').value.trim();if(amount<40||amount>state.tokens){$('withdrawMsg').textContent='Enter at least 40 tokens and no more than your balance.';return}if(!holder||!a||a!==b){$('withdrawMsg').textContent='Check account holder name and make sure both account numbers match.';return}let r={id:Date.now(),name:state.name,amount,nu:amount/4,holder,acc:a,status:'Pending review'};state.withdrawals.unshift(r);$('withdrawMsg').textContent='Demo request submitted to host control panel.';updateUI()}
+function submitTicket(){let ticket=Number($('ticketChoice').value),file=$('ticketFile').files[0];if(!file){$('ticketMessage').textContent='Attach a demo image file first.';return}if(state.tokens<400){$('ticketMessage').textContent='Not enough demo tokens.';return}state.tokens-=400;state.tickets.unshift({id:Date.now(),ticket,name:state.name,status:'Pending host approval',file:file.name});$('ticketMessage').textContent='Submitted for host approval. Ticket is not purchased until approved.';updateUI();renderMyTickets()}
+function startTicket(){if(ticketInterval)clearInterval(ticketInterval);$('ticketFlow').classList.remove('hide');ticketSeconds=120;$('ticketTimer').textContent='02:00';$('ticketMessage').textContent='';ticketInterval=setInterval(()=>{ticketSeconds--;$('ticketTimer').textContent=String(Math.floor(ticketSeconds/60)).padStart(2,'0')+':'+String(ticketSeconds%60).padStart(2,'0');if(ticketSeconds<=0){clearInterval(ticketInterval);$('ticketMessage').textContent='Demo payment window expired. You may start again.'}},1000)}
+function searchTicket(){let n=Number($('ticketSearch').value),r=state.tickets.find(t=>t.ticket===n);$('ticketSearchResult').textContent=n<2000||n>4000?'Enter a ticket number between 2000 and 4000.':r?'Ticket '+n+' · '+r.status:'Ticket '+n+' is available in this demo preview.'}
+function renderMyTickets(){$('myTickets').innerHTML=state.tickets.filter(t=>t.name===state.name).map(t=>`<div class="listrow"><span>🎟 Ticket #${t.ticket}<br><span class="small">${t.status}</span></span><span class="pill">${t.status==='Purchased'?'Approved':'Demo'}</span></div>`).join('')||'<span class="small">No ticket requests yet.</span>'}
+function sendChat(){let v=$('chatText').value.trim();if(!v)return;state.chat.push({from:state.name,text:v,time:new Date().toLocaleTimeString()});$('chatText').value='';renderChat();updateUI()}
+function renderChat(){$('chatLog').innerHTML=state.chat.map(m=>`<div class="msg ${m.from===state.name?'me':''}"><b>${m.from}</b><div>${escapeHtml(m.text)}</div><div class="small">${m.time}</div></div>`).join('');$('chatLog').scrollTop=$('chatLog').scrollHeight}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function attachChatFile(){let f=$('chatFile').files[0];$('attachMsg').textContent=f?'Demo attachment selected: '+f.name+' (not uploaded to a server).':'Choose a file first.'}
+async function toggleRecord(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){$('recordStatus').textContent='Voice recording is not supported in this browser.';return}if(recorder&&recorder.state==='recording'){recorder.stop();$('recordBtn').textContent='● Record voice';return}try{let stream=await navigator.mediaDevices.getUserMedia({audio:true});recordChunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>recordChunks.push(e.data);recorder.onstop=()=>{let blob=new Blob(recordChunks,{type:'audio/webm'}),url=URL.createObjectURL(blob);$('voicePlayback').src=url;$('voicePlayback').classList.remove('hide');$('recordStatus').textContent='Voice note recorded locally (not sent).';stream.getTracks().forEach(t=>t.stop())};recorder.start();$('recordBtn').textContent='■ Stop recording';$('recordStatus').textContent='Recording…'}catch(e){$('recordStatus').textContent='Microphone permission was not granted.'}}
+function adminLogin(){if($('adminPass').value==='2004'){state.hostUnlocked=true;$('adminLogin').classList.add('hide');$('adminPanel').classList.remove('hide');$('adminError').textContent='';renderAdmin()}else $('adminError').textContent='Incorrect passcode.'}
+function adminLogout(){state.hostUnlocked=false;$('adminPass').value='';$('adminLogin').classList.remove('hide');$('adminPanel').classList.add('hide')}
+function saveAdminSettings(){state.scheme=Number($('scheme').value);state.dailyBudget=Number($('dailyBudget').value)||40000;state.memberCount=Math.max(345,Math.min(383,Number($('memberSet').value)||362));state.activeCount=Math.max(100,Number($('activeSet').value)||127);$('adminSettingsMsg').textContent='Saved demo settings.';updateUI()}
+function renderAdmin(){if(!state.hostUnlocked)return;let cr=state.ledger.reduce((a,r)=>a+r.cr,0),dr=state.ledger.reduce((a,r)=>a+r.dr,0);$('hostCr').textContent=fmt(cr);$('hostDr').textContent=fmt(dr);$('hostNet').textContent=fmt(cr-dr);$('scheme').value=state.scheme;$('dailyBudget').value=state.dailyBudget;$('memberSet').value=state.memberCount;$('activeSet').value=state.activeCount;
+$('playerList').innerHTML=state.players.map((p,i)=>`<div class="listrow"><span>${i+1}. ${escapeHtml(p)}</span><span class="pill">Registered</span></div>`).join('')||'<span class="small">No players yet.</span>';
+$('ledgerTotals').textContent='Rounds: '+state.ledger.length+' · Total CR: '+fmt(cr)+' · Total DR: '+fmt(dr)+' · Net '+(cr-dr>=0?'profit':'loss')+': '+fmt(Math.abs(cr-dr))+' tokens';
+$('ledgerRows').innerHTML=state.ledger.map(r=>`<tr><td style="padding:8px;border-bottom:1px solid #273147">${r.time}</td><td style="padding:8px;border-bottom:1px solid #273147">${escapeHtml(r.player)}</td><td style="padding:8px;border-bottom:1px solid #273147">${r.game}</td><td style="padding:8px;border-bottom:1px solid #273147">${r.result}</td><td align="right" style="padding:8px;border-bottom:1px solid #273147">${r.cr}</td><td align="right" style="padding:8px;border-bottom:1px solid #273147">${r.dr}</td><td align="right" style="padding:8px;border-bottom:1px solid #273147">${r.net>0?'+':''}${r.net}</td></tr>`).join('');
+$('withdrawRequests').innerHTML=state.withdrawals.map(r=>`<div class="listrow"><div><b>${escapeHtml(r.name)}</b> · ${r.amount} tokens = Nu. ${r.nu}<div class="small">${escapeHtml(r.holder)} · A/C ${escapeHtml(r.acc)} · ${r.status}</div></div><div><button onclick="approveWithdraw(${r.id},true)">Approve</button> <button class="danger" onclick="approveWithdraw(${r.id},false)">Reject</button></div></div>`).join('')||'No requests yet.';
+$('ticketRequests').innerHTML=state.tickets.map(t=>`<div class="listrow"><div><b>${escapeHtml(t.name)}</b> · Ticket #${t.ticket}<div class="small">File: ${escapeHtml(t.file)} · ${t.status}</div></div><div><button onclick="approveTicket(${t.id})">Approve ticket</button></div></div>`).join('')||'No tickets submitted.';
+$('hostInbox').innerHTML=state.chat.map((m,i)=>`<div class="listrow"><div><b>${escapeHtml(m.from)}</b><div>${escapeHtml(m.text)}</div><div class="small">${m.time}</div></div><button class="secondary" onclick="hostReply(${i})">Reply</button></div>`).join('')||'No messages yet.';
+$('badgeAdmin').textContent=Object.entries(state.badges).map(([k,v])=>BADGES[k].icon+' '+BADGES[k].name+': '+v).join(' · ')}
+function approveWithdraw(id,ok){let r=state.withdrawals.find(x=>x.id===id);if(!r)return;r.status=ok?'Approved · transfer handled outside demo':'Rejected';if(ok){state.tokens-=r.amount}renderAdmin();updateUI()}
+function approveTicket(id){let t=state.tickets.find(x=>x.id===id);if(!t)return;t.status='Purchased';renderAdmin();renderMyTickets();updateUI()}
+function hostReply(i){let msg=prompt('Reply to '+state.chat[i].from+':');if(msg){state.chat.push({from:'NBA Host',text:msg,time:new Date().toLocaleTimeString()});renderChat();renderAdmin();save()}}
+// Telegram Mini App integration. Identity is only used to prefill a display name;
+    // a production backend must validate Telegram initData server-side.
+    const tgApp = window.Telegram && window.Telegram.WebApp;
+    if (tgApp) {
+      tgApp.ready();
+      tgApp.expand();
+      try {
+        const tgUser = tgApp.initDataUnsafe && tgApp.initDataUnsafe.user;
+        if (tgUser && !$('playerName').value) {
+          $('playerName').value = tgUser.username || [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || '';
+        }
+      } catch (e) {}
+    }
+    load();makePickButtons('wheel');makePickButtons('dice');
+for(let n=2000;n<=4000;n++){let o=document.createElement('option');o.value=n;o.textContent='#'+n;$('ticketChoice').appendChild(o);if(n>=2020)break}
+if(state.name){$('entry').classList.add('hide');$('app').classList.remove('hide');$('winnerBanner').textContent='👑 Welcome back to NBA, '+state.name+' — take the throne of NBA, it’s all on luck!'}else{$('entry').classList.remove('hide');$('app').classList.add('hide')}
+updateUI();renderChat();renderMyTickets();
+</script>
+</body>
+</html>
