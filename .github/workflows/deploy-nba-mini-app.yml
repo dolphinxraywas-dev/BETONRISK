@@ -25,8 +25,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Prepare static site
         run: |
-          mkdir -p site
+          mkdir -p site/nba-telegram-mini-app
           cp nba-telegram-mini-app/index.html site/index.html
+          cp nba-telegram-mini-app/index.html site/nba-telegram-mini-app/index.html
           touch site/.nojekyll
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
