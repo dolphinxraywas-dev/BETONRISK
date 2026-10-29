@@ -129,6 +129,6 @@ async function initializeChat(){
  }catch(e){chatStatus(e.message||'Chat setup is incomplete.',true)}
 }
 
-const tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();const u=tg.initDataUnsafe&&tg.initDataUnsafe.user;if(u){$('playerName').textContent=[u.first_name,u.last_name].filter(Boolean).join(' ')||u.username||'Telegram Player';$('playerId').textContent=u.id||'Available'}}render();
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();const u=tg.initDataUnsafe&&tg.initDataUnsafe.user;if(u){$('playerName').textContent=[u.first_name,u.last_name].filter(Boolean).join(' ')||u.username||'Telegram Player';$('playerId').textContent=u.id||'Available'}}initializeChat();render();
 })();
 </script></body></html>
