@@ -5,7 +5,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
 
-const required = ['TELEGRAM_BOT_TOKEN', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'HOST_TELEGRAM_IDS'];
+const required = ['TELEGRAM_BOT_TOKEN', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'HOST_TELEGRAM_IDS', 'ALLOWED_ORIGIN'];
 for (const key of required) {
   if (!process.env[key] || process.env[key].startsWith('replace_')) {
     console.error(`Missing required environment variable: ${key}`);
@@ -23,7 +23,7 @@ app.use(express.json({ limit: '16kb' }));
 app.use(cors({
   origin(origin, callback) {
     const allowed = process.env.ALLOWED_ORIGIN;
-    if (!origin || !allowed || origin === allowed) return callback(null, true);
+    if (!origin || origin === allowed) return callback(null, true);
     return callback(new Error('Origin not allowed'));
   }
 }));
