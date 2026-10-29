@@ -29,4 +29,4 @@ Required controls:
 - Before connecting any paid tokens, prizes, cash-out, or gambling mechanics, get legal advice and use approved payment providers. This prototype deliberately uses only non-redeemable demo tokens.
 
 ## Database
-See `supabase/schema.sql`. It is a starting schema, not a deployed or audited backend. Configure and test RLS policies and server functions before using any real accounts or balances.
+See `supabase/schema.sql` and `supabase/functions/game-round/index.ts`. The Edge Function verifies Telegram `initData` freshness/signature and generates demo dice on the server, but it is only a starter endpoint: it does not persist rounds or update a wallet. Deploy with Supabase CLI after linking a Supabase project, set the `TELEGRAM_BOT_TOKEN` secret on the server, and call the function with the raw `Telegram.WebApp.initData` string (not `initDataUnsafe`). The frontend still runs in local demo mode until it is deliberately wired to this endpoint. Configure and test RLS policies, atomic ledger transactions, idempotency, admin allowlists, and rate limits before using real accounts or balances.
