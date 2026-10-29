@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: top-dice-api
+    runtime: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: HOST_TELEGRAM_IDS
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ALLOWED_ORIGIN
+        sync: false
