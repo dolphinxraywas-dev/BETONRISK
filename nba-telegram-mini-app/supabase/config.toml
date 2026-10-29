@@ -1,0 +1,5 @@
+# Supabase local/deploy configuration for the NBA demo endpoint.
+# Telegram initData is verified inside the function; Supabase JWT auth is disabled only for this
+# function because Telegram signatures are its authentication mechanism. Do not expose secrets.
+[functions.game-round]
+verify_jwt = false
