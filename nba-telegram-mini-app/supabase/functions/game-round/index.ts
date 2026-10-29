@@ -28,15 +28,10 @@ async function verifyTelegramInitData(initData: string, botToken: string) {
   );
   const signature = new Uint8Array(await crypto.subtle.sign("HMAC", validationKey, encoder.encode(dataCheckString)));
   const actualHash = [...signature].map(b => b.toString(16).padStart(2, "0")).join("");
-  if (actualHash.length !== suppliedHash.length ||
-      !crypto.subtle.timingSafeEqual) {
-    // Deno's Web Crypto does not expose timingSafeEqual in all runtimes; compare bytes below.
-    if (actualHash !== suppliedHash) throw new Error("Invalid Telegram signature");
-  } else {
-    const a = encoder.encode(actualHash), b = encoder.encode(suppliedHash);
-    let diff = 0; for (let i=0;i<a.length;i++) diff |= a[i] ^ b[i];
-    if (diff !== 0) throw new Error("Invalid Telegram signature");
-  }
+  if (actualHash.length !== suppliedHash.length) throw new Error("Invalid Telegram signature");
+  const a = encoder.encode(actualHash), b = encoder.encode(suppliedHash);
+  let diff = 0; for (let i=0;i<a.length;i++) diff |= a[i] ^ b[i];
+  if (diff !== 0) throw new Error("Invalid Telegram signature");
   const userText = params.get("user");
   if (!userText) throw new Error("Missing Telegram user");
   return JSON.parse(userText) as { id: number; first_name?: string; username?: string };
@@ -58,7 +53,15 @@ serve(async (req) => {
         picks.some((n: unknown) => !Number.isInteger(n) || Number(n) < 1 || Number(n) > 6)) {
       return Response.json({ error: "Choose two numbers from 1 to 6" }, { status: 400, headers: cors });
     }
-    const dice = Array.from({ length: 6 }, () => crypto.getRandomValues(new Uint32Array(1))[0] % 6 + 1);
+    const rollDie = () => {
+      const range = 0x100000000;
+      const limit = range - (range % 6);
+      const buf = new Uint32Array(1);
+      let value: number;
+      do { crypto.getRandomValues(buf); value = buf[0]; } while (value >= limit);
+      return value % 6 + 1;
+    };
+    const dice = Array.from({ length: 6 }, rollDie);
     const counts = new Map<number, number>();
     for (const d of dice) counts.set(d, (counts.get(d) || 0) + 1);
     let matchCount = 0;
